@@ -12,6 +12,7 @@ from scipy.stats import boxcox
 import traceback
 import logging
 import pandas as pd
+import numpy as np
 import pmdarima as pm
 from matplotlib import pyplot
 from pandas.plotting import autocorrelation_plot
@@ -27,8 +28,7 @@ import os
 
 def convertIndexToDateDF(filename):
     col_names = ["date", "value"]
-    df = pd.read_csv(filename,
-                     names = col_names, header = 0, parse_dates = [0])
+    df = pd.read_csv(filename,names = col_names, header = 0, parse_dates = [0])
     df['date'] = pd.to_datetime(df['date'],infer_datetime_format=True)
     df = df.set_index(['date'])
     return df

@@ -1,19 +1,26 @@
 import model_dispatcher as md
 import pandas as pd
 import numpy as np
-import config
+# import config
+import configparser
 import argparse
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def chooseModel(data, model):
-    
+
+    config = configparser.ConfigParser()
+    config.read('config.config')
+    path=config['DEFAULT'][data]
+    print('hasdas',type(path))
     if model == 'arima':
-        try:    
-            path=config.data
-        except:
-            return 'An exception occured'
+        # try:    
+        # except:
+        #     return 'An exception occured'
+        
         data = md.convertIndexToDateDF(path)
         diff = 0
         diff_df = data
@@ -33,6 +40,7 @@ def chooseModel(data, model):
         predictions = arima_model.predict(start=len(train), end=len(train)+len(test)-1, dynamic=False)
 
         ar_score = mean_squared_error(test, predictions)
+        print(ar_score)
         return ar_score
     
     else:
@@ -42,7 +50,8 @@ def chooseModel(data, model):
         autoarima = md.model_Autoarima(train)
         pred = autoarima.predict()
         ar_score = mean_squared_error(test, pred)
-        # print('ARIMA MSE: {}'.format(round(ar_score,4)))
+        print('ARIMA MSE: {}'.format(round(ar_score,4)))
+        print(ar_score)
         return ar_score
 
 
